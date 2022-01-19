@@ -16,40 +16,13 @@ DATA = {
         'сыр, ломтик': 1,
         'помидор, ломтик': 1,
     },
-    # можете добавить свои рецепты ;)
 }
 
 
-# Напишите ваш обработчик. Используйте DATA как источник данных
-# Результат - render(request, 'calculator/index.html', context)
-# В качестве контекста должен быть передан словарь с рецептом:
-# context = {
-#   'recipe': {
-#     'ингредиент1': количество1,
-#     'ингредиент2': количество2,
-#   }
-# }
-
-
-def omlet(request):
+def recipe_maker(request, recipe):
     servings = int(request.GET.get('servings', 1))
-    context = {
-        'recipe': {
-            'яйца, шт': 2*servings,
-            'молоко, л': 0.1*servings,
-            'соль, ч.л.': 0.5*servings,
-        }
-    }
+    context = {'recipe': {}}
+    for ingredient in DATA[recipe].keys():
+        context['recipe'][ingredient] = round(DATA[recipe][ingredient]*servings, 3)
+
     return render(request, 'calculator/index.html', context)
-
-
-def pasta(request):
-    servings = int(request.GET.get('servings', 1))
-    context = {
-        'recipe': {
-            'макароны, г': 0.3*servings,
-            'сыр, г': 0.05*servings,
-        }
-    }
-    return render(request, 'calculator/index.html', context)
-
